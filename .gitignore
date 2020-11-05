@@ -1,0 +1,9 @@
+src/config.py
+bin/
+lib/
+include/
+pyvenv.cfg
+src/csign.db
+src/initdb.py
+requirements.txt
+migrate.pgloader
