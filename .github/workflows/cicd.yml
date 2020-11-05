@@ -34,6 +34,7 @@ jobs:
           key: ${{ secrets.GH_ACTIONS }}
           port: 22
           script: |
+            cd /home/flask
             rm -rf csign
             git clone https://github.com/petelah/csign.git
             python3.8 -m venv /home/flask/csign/venv
