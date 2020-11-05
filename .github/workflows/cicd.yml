@@ -37,6 +37,7 @@ jobs:
             rm -rf csign
             git clone https://github.com/petelah/csign.git
             python3.8 -m venv /home/flask/csign/venv
+            /home/flask/csign/venv/bin/pip3.8 install wheel
             /home/flask/csign/venv/bin/pip3.8 install -r /home/flask/csign/requirements.txt
             cd /home/flask/csign
             export SECRET_KEY=${{ secrets.SECRET_KEY }}
