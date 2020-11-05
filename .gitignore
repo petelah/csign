@@ -5,7 +5,6 @@ include/
 pyvenv.cfg
 src/csign.db
 src/initdb.py
-requirements.txt
 migrate.pgloader
 src/users/__pycache__/
 src/errors/__pycache__/
