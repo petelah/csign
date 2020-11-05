@@ -3,7 +3,21 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-from .config import Config
+# from src.config import Config
+
+from os import getenv
+
+
+class Config:
+    SECRET_KEY = getenv('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = getenv('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_TRACK_MODIFICATIONS = getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
+    MAIL_SERVER = getenv('MAIL_SERVER')
+    MAIL_PORT = getenv('MAIL_PORT')
+    MAIL_USE_TLS = getenv('MAIL_USE_TLS')
+    MAIL_USERNAME = getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = getenv('MAIL_PASSWORD')
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -11,6 +25,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 mail = Mail()
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
