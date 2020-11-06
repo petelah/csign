@@ -1,5 +1,6 @@
 alembic==1.4.3
 attrs==20.2.0
+autopep8==1.5.4
 bcrypt==3.2.0
 blinker==1.4
 cffi==1.14.3
@@ -29,6 +30,7 @@ Pillow==8.0.1
 pluggy==0.13.1
 psycopg2-binary==2.8.6
 py==1.9.0
+pycodestyle==2.6.0
 pycparser==2.20
 pyparsing==2.4.7
 pytest==6.1.2
