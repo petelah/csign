@@ -22,4 +22,4 @@ jobs:
           autopep8 --recursive --in-place --aggressive --aggressive .
       - name: Run Tests
         run: |
-          python -m unittest discover tests/
+          python -m unittest discover src/tests/
