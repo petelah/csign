@@ -13,3 +13,4 @@ src/__pycache__/
 share/
 .idea
 src/.env
+__pycache__/

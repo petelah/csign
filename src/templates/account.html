@@ -1,16 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-        <div class="content-section">
-            <div class="media">
-                <img class="rounded-circle account-img" src="{{ logo }}">
-                <div class="media-body">
-                    <h2 class="account-heading">{{ current_user.business_name }}</h2>
-                    <p class="text-secondary">{{ current_user.email }}</p>
-                    <p class="text-secondary"><a href="{{ qr_file }}">Download QR code</a></p>
-
-                </div>
-            </div>
+        <div class="login-clean">
                 <form method="POST" action="" enctype="multipart/form-data">
+                    <div><img class="rounded-circle account-img" src="{{ logo }}">
+                        <h4>{{ current_user.business_name }}</h4>
+                        <p class="text-secondary">{{ current_user.email }}</p>
+                        <p class="text-secondary"><a href="{{ qr_file }}">Download QR code</a></p>
+                    </div>
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
                         <legend class="border-bottom mb-4">Account Info</legend>
@@ -79,7 +75,7 @@
 
                     </fieldset>
                     <div class="form-group">
-                        {{ form.submit(class="btn btn-outline-info") }}
+                        {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
         </div>
