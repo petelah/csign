@@ -64,10 +64,11 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        if form.picture.data:
+        if form.logo.data:
             picture_file = save_picture(form.logo.data)
             current_user.logo = picture_file
         current_user.menu_url = form.menu_url.data
+        current_user.business_url = strip_chars(form.business_url.data).lower()
         current_user.email = form.email.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
@@ -75,6 +76,7 @@ def account():
     elif request.method == 'GET':
         form.business_name.data = current_user.business_name
         form.menu_url.data = current_user.menu_url
+        form.business_url.data = current_user.business_url
         form.email.data = current_user.email
     logo = url_for('static', filename='profile_pics/' + current_user.logo)
     qr_file = url_for('static', filename='qr_codes/' + current_user.qr_image)

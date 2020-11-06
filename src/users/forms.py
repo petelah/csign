@@ -59,7 +59,7 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
     business_name = StringField('Business Name',
                            validators=[DataRequired(), Length(min=2, max=120)])
-    business_url = StringField('Business URL',
+    business_url = StringField('Sign in link "c-sign.in/signin/<link>"',
                            validators=[DataRequired(), Length(min=2, max=200)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     menu_url = StringField('Link to online menu',
