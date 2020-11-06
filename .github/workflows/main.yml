@@ -24,6 +24,7 @@ jobs:
             cd /home/flask/csign
             touch .env
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+            echo "SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}" >> .env
             echo "SQLALCHEMY_TRACK_MODIFICATIONS=${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}" >> .env
             echo "MAIL_SERVER=${{ secrets.MAIL_SERVER }}" >> .env
             echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
