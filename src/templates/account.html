@@ -2,7 +2,8 @@
 {% block content %}
         <div class="login-clean">
                 <form method="POST" action="" enctype="multipart/form-data">
-                    <div><img class="rounded-circle account-img" src="{{ logo }}">
+                    <div>
+{#                        <img class="rounded-circle account-img img-responsive" src="{{ logo }}">#}
                         <h4>{{ current_user.business_name }}</h4>
                         <p class="text-secondary">{{ current_user.email }}</p>
                         <p class="text-secondary"><a href="{{ qr_file }}">Download QR code</a></p>

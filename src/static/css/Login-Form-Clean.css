@@ -4,7 +4,7 @@
 }
 
 .login-clean form {
-  max-width: 420px;
+  max-width: 520px;
   width: 90%;
   margin: 0 auto;
   background-color: #ffffff;
@@ -19,6 +19,10 @@
   padding: 0 0 20px;
   font-size: 100px;
   color: rgb(244,71,107);
+}
+
+.login-clean form img {
+  max-width: 175px;
 }
 
 .login-clean form .form-control {
