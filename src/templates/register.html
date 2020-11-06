@@ -1,10 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
+    <div class="login-clean">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join Today</legend>
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration">
+                    <h4>Sign Up</h4>
+                 </div>
                 <div class="form-group">
                     {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
@@ -158,13 +161,14 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ form.submit(class="btn btn-primary btn-block") }}
+            </div>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Already Have An Account? <a class="ml-2" href="{{ url_for('users.login') }}">Sign In</a>
+                </small>
             </div>
         </form>
     </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Already Have An Account? <a class="ml-2" href="{{ url_for('users.login') }}">Sign In</a>
-        </small>
-    </div>
+
 {% endblock content %}
