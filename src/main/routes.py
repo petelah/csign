@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 
 
 @main.route("/")
-@main.route("/home", methods=['GET','POST'])
+@main.route("/home")
 def home():
     return render_template('home.html')
 
@@ -20,32 +20,32 @@ def about():
 @main.route("/signin/<string:business_name>", methods=['GET', 'POST'])
 def sign_in(business_name):
     form = SignInForm()
-    try:
-        business = User.query.filter_by(business_url=business_name).first()
-        if form.validate_on_submit():
-            signIn = SignIn(
-                first_name=form.first_name.data,
-                last_name=form.last_name.data,
-                email=form.email.data,
-                phone=form.phone_number.data,
-                symptoms=form.symptoms.data,
-                signup=form.sign_up.data,
-                user_id=business
-            )
-            db.session.add(signIn)
-            db.session.commit()
+    business = User.query.filter_by(business_url=business_name).first_or_404()
+    if form.validate_on_submit():
+        new_sign_in = SignIn(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            phone=form.phone_number.data,
+            symptoms=form.symptoms.data,
+            signup=form.sign_up.data,
+            user_id=business
+        )
+        db.session.add(new_sign_in)
+        db.session.commit()
+        if business.menu_url is not None:
+            bu = business.menu_url
+            if bu.find("http://") != 0 and bu.find("https://") != 0:
+                bu = "http://" + bu
+            return redirect(bu)
+        else:
             flash('You have been signed in!', 'success')
-            # redirect to menu
-            if business.menu_url:
-                return redirect(business.menu_url)
-            return render_template('signin.html', logo=logo, business_name=b_name, form=form)
-        elif request.method == 'GET':
-            logo = url_for('static', filename='profile_pics/' + business.logo)
-            b_name = business.business_name
             return render_template('signin.html', logo=logo, business_name=b_name, form=form)
 
-    except:
-        return render_template('errors/404.html'), 404
+    elif request.method == 'GET':
+        logo = url_for('static', filename='profile_pics/' + business.logo)
+        b_name = business.business_name
+        return render_template('signin.html', logo=logo, business_name=b_name, form=form)
     logo = url_for('static', filename='profile_pics/' + business.logo)
     b_name = business.business_name
     return render_template('signin.html', logo=logo, business_name=b_name, form=form)

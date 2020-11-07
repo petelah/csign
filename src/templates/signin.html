@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
-        <div class="media">
-                <img class="account-img" src="{{ logo }}">
-                <div class="media-body">
-                    <h2 class="account-heading">Sign into {{ business_name }}</h2>
-                </div>
-        </div>
+    <div class="login-clean">
         <form method="POST" action="">
-            {{ form.hidden_tag() }}
+            {{ form.csrf_token() }}
+            <div class="media">
+{#                    <img class="account-img" src="{{ logo }}">#}
+                    <div class="media-body">
+                        <h2 class="account-heading">Sign into {{ business_name }}</h2>
+                    </div>
+            </div>
+
             <fieldset class="form-group">
                 <div class="form-group">
                     {{ form.email.label(class="form-control-label") }}
@@ -75,7 +76,7 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
             </div>
         </form>
     </div>

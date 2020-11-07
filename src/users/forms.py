@@ -102,8 +102,6 @@ class SignInForm(FlaskForm):
     last_name = StringField('last Name',
                             validators=[DataRequired(), Length(min=2, max=30)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    business_name = StringField('Business Name',
-                           validators=[DataRequired(), Length(min=2, max=120)])
     phone_number = StringField('Phone Number',
                                 validators=[DataRequired(), Length(min=8, max=15)])
     symptoms = BooleanField('I am not experiencing any flu like symptoms:', validators=[DataRequired()])
