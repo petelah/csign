@@ -3,13 +3,13 @@
             aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Pricing</a></li>
+                <li class="nav-item mx-0 mx-lg-1"><a id="contact" class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('main.contact') }}">Contact Us</a></li>
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.account') }}">Account</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a id="account" class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.account') }}">Account</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.logout') }}">Logout</a></li>
                 {% else %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.register') }}">Register</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.login') }}">Login</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a id="register" class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.register') }}">Register</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a id="login" class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('users.login') }}">Login</a></li>
                 {% endif %}
             </ul>
         </div>

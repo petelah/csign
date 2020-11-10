@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from src.models import User
 from flask_login import current_user
@@ -107,3 +107,13 @@ class SignInForm(FlaskForm):
     symptoms = BooleanField('I am not experiencing any flu like symptoms:', validators=[DataRequired()])
     sign_up = BooleanField('Want cool emails from this place?')
     submit = SubmitField('Sign In')
+
+
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=90)],
+                       render_kw={"placeholder": "Name"})
+    email = StringField('Email', validators=[DataRequired(), Email()],
+                        render_kw={"placeholder": "Email"})
+    message = TextAreaField('Message', validators=[DataRequired(), Length(min=10, max=1200)],
+                            render_kw={"placeholder": "Message"})
+    submit = SubmitField('Send')

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="portfolio" style="margin-top: 50px;">
+    <div class="container">
+        {% if type %}
+                {% if type == 'email' %}
+                    <h1>Email Sent!</h1>
+                {% endif %}
+            {% else %}
+                <h1>Great Success!</h1>
+            {% endif %}
+
+        <div class="container">
+            <img src="https://media1.giphy.com/media/a0h7sAqON67nO/giphy.gif">
+            {% if type %}
+                {% if type == 'email' %}
+                    <p style="margin-top: 25px;">We will get back to you shortly</p>
+                {% endif %}
+            {% else %}
+                <p style="margin-top: 25px;">Have a good time!</p>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock content %}

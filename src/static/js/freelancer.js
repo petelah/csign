@@ -15,6 +15,21 @@
     }
   });
 
+
+  var addToNav = (function() {
+    if (window.location.pathname === '/register'){
+      $('#register').addClass("active");
+    } else if (window.location.pathname === '/login') {
+      $('#login').addClass("active");
+    } else if (window.location.pathname === '/account') {
+      $('#account').addClass("active");
+    } else if (window.location.pathname === '/contact') {
+      $('#contact').addClass("active");
+    }
+  });
+
+  addToNav();
+
   // Scroll to top button appear
   $(document).scroll(function() {
     var scrollDistance = $(this).scrollTop();
@@ -30,11 +45,11 @@
     $('.navbar-collapse').collapse('hide');
   });
 
-  // Activate scrollspy to add active class to navbar items on scroll
-  $('body').scrollspy({
-    target: '#mainNav',
-    offset: 80
-  });
+  // // Activate scrollspy to add active class to navbar items on scroll
+  // $('body').scrollspy({
+  //   target: '#mainNav',
+  //   offset: 80
+  // });
 
   // Collapse Navbar
   var navbarCollapse = function() {
@@ -48,6 +63,7 @@
   navbarCollapse();
   // Collapse the navbar when page is scrolled
   $(window).scroll(navbarCollapse);
+
 
   // Floating label headings for the contact form
   $(function() {
