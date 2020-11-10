@@ -1,7 +1,8 @@
 from flask import render_template, request, Blueprint, flash, redirect, url_for, abort
 from src.models import SignIn, User
 from src import db
-from src.users.forms import SignInForm
+from src.users.forms import SignInForm, ContactForm
+from src.users import send_contact_email
 
 main = Blueprint('main', __name__)
 
@@ -12,9 +13,27 @@ def home():
     return render_template('home.html')
 
 
+@main.route("/home2")
+def home2():
+    return render_template('home2.html')
+
+
 @main.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+
+@main.route("/contact", methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        send_contact_email(
+            form.name.data,
+            form.email.data,
+            form.message.data
+        )
+        return render_template('success.html', type='email')
+    return render_template('contact.html', title='Contact Us', form=form)
 
 
 @main.route("/signin/<string:business_name>", methods=['GET', 'POST'])

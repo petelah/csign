@@ -44,6 +44,15 @@ def send_qr_email():
     pass
 
 
+def send_contact_email(name, email, message):
+    msg = Message(f'Contact email from {name}',
+                  sender=email,
+                  reply_to=email,
+                  recipients=['admin@c-sign.in'])
+    msg.body = f"""{message}"""
+    mail.send(msg)
+
+
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
