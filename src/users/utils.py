@@ -6,6 +6,7 @@ import os
 from PIL import Image
 import qrcode
 import re
+from threading import Thread
 
 
 def strip_chars(business_name):
@@ -44,13 +45,19 @@ def send_qr_email():
     pass
 
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
 def send_contact_email(name, email, message):
     msg = Message(f'Contact email from {name}',
                   sender=email,
                   reply_to=email,
                   recipients=['admin@c-sign.in'])
     msg.body = f"""{message}"""
-    mail.send(msg)
+    app = current_app._get_current_object()
+    Thread(target=send_async_email, args=(app, msg)).start()
 
 
 def send_reset_email(user):

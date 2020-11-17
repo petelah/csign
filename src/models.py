@@ -55,5 +55,5 @@ class SignIn(db.Model):
     phone = db.Column(db.String(15), nullable=False)
     signup = db.Column(db.Boolean, nullable=True, default=True)
     symptoms = db.Column(db.Boolean, nullable=False, default=False)
-    date_sign = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_sign = db.Column(db.DateTime, nullable=False, default=datetime.now)
     business_id = db.Column(db.Integer, db.ForeignKey('user.id'))

@@ -1,3 +1,4 @@
+from flask import redirect, url_for
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from src import db, admin
@@ -12,6 +13,9 @@ class AdminView(ModelView):
 			else:
 				return False
 		return False
+
+	def inaccessible_callback(self, name, **kwargs):
+		return redirect(url_for('main.home'))
 
 
 admin.add_view(AdminView(User, db.session))
