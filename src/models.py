@@ -44,7 +44,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.first_name}', '{self.email}')"
 
 
 class SignIn(db.Model):
@@ -55,5 +55,5 @@ class SignIn(db.Model):
     phone = db.Column(db.String(15), nullable=False)
     signup = db.Column(db.Boolean, nullable=True, default=True)
     symptoms = db.Column(db.Boolean, nullable=False, default=False)
-    date_sign = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_sign = db.Column(db.DateTime, nullable=False, default=datetime.now)
     business_id = db.Column(db.Integer, db.ForeignKey('user.id'))

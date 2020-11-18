@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField
+from wtforms.fields.html5 import TelField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from src.models import User
 from flask_login import current_user
@@ -13,7 +14,7 @@ class RegistrationForm(FlaskForm):
                            validators=[DataRequired(), Length(min=2, max=120)])
     first_name = StringField('First Name',
                                 validators=[DataRequired(), Length(min=2, max=30)])
-    last_name = StringField('last Name',
+    last_name = StringField('Last Name',
                                 validators=[DataRequired(), Length(min=2, max=30)])
     phone_number = StringField('Phone Number',
                                 validators=[DataRequired(), Length(min=8, max=15)])
@@ -102,7 +103,7 @@ class SignInForm(FlaskForm):
     last_name = StringField('last Name',
                             validators=[DataRequired(), Length(min=2, max=30)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    phone_number = StringField('Phone Number',
+    phone_number = TelField('Phone Number',
                                 validators=[DataRequired(), Length(min=8, max=15)])
     symptoms = BooleanField('I am not experiencing any flu like symptoms:', validators=[DataRequired()])
     sign_up = BooleanField('Want cool emails from this place?')

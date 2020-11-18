@@ -70,6 +70,7 @@ def account():
         current_user.menu_url = form.menu_url.data
         current_user.business_url = strip_chars(form.business_url.data).lower()
         current_user.email = form.email.data
+        current_user.business_name = form.business_name.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('users.account'))
