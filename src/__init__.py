@@ -50,7 +50,7 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
-    admin.init_app(app)
+    #admin.init_app(app)
 
 
     from src.users.routes import users
