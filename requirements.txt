@@ -5,6 +5,9 @@ autopep8==1.5.4
 bcrypt==3.2.0
 billiard==3.6.3.0
 blinker==1.4
+boto3==1.16.25
+botocore==1.19.25
+celery==5.0.2
 cffi==1.14.3
 click==7.1.2
 click-didyoumean==0.0.3
@@ -18,6 +21,7 @@ Flask-Bcrypt==0.7.1
 Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.3
+flask-redis==0.4.0
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
 gunicorn==20.0.4
@@ -28,6 +32,7 @@ iniconfig==1.1.1
 intervals==0.9.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
+jmespath==0.10.0
 kombu==5.0.2
 Mako==1.1.3
 MarkupSafe==1.1.1
@@ -45,10 +50,13 @@ python-dateutil==2.8.1
 python-editor==1.0.4
 pytz==2020.4
 qrcode==6.1
+redis==3.5.3
 rq==1.6.1
+s3transfer==0.3.3
 six==1.15.0
 SQLAlchemy==1.3.20
 toml==0.10.2
+urllib3==1.26.2
 validators==0.18.1
 vine==5.0.0
 wcwidth==0.2.5

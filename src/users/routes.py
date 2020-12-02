@@ -1,10 +1,11 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, send_from_directory, abort
 from src import db, bcrypt
 from src.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                              RequestResetForm, ResetPasswordForm)
-from src.users.utils import save_picture, send_reset_email, send_qr_email, generate_qr, strip_chars
+from src.users.utils import save_picture, send_reset_email, send_qr_email, generate_qr, strip_chars, save_csv
 from src.models import User
 from flask_login import login_user, current_user, logout_user, login_required
+from src.config import Config
 
 
 users = Blueprint('users', __name__)
@@ -82,6 +83,16 @@ def account():
     logo = url_for('static', filename='profile_pics/' + current_user.logo)
     qr_file = url_for('static', filename='qr_codes/' + current_user.qr_image)
     return render_template('account.html', title='Account', logo=logo, qr_file=qr_file, form=form)
+
+
+@users.route("/download-csv")
+@login_required
+def download_csv():
+    try:
+        filename = save_csv(current_user.id)
+        return send_from_directory(Config.S3_CSV_FOLDER, filename=filename, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
 
 
 @users.route("/reset_password", methods=['GET', 'POST'])

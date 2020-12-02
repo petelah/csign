@@ -25,6 +25,8 @@
       $('#account').addClass("active");
     } else if (window.location.pathname === '/contact') {
       $('#contact').addClass("active");
+    } else if (window.location.pathname === '/admin') {
+      $('#admin').addClass("active");
     }
   });
 
