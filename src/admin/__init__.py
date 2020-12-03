@@ -1,4 +1,5 @@
 from flask import Blueprint
+from src.config import Config
 
 bp = Blueprint('admin_bp', __name__)
 
