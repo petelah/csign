@@ -44,12 +44,12 @@ def create_app(config_class=Config):
     mail.init_app(app)
     if not Config.GH_TEST:
         admin.init_app(app)
+        from src.admin import bp as admin_bp
+        app.register_blueprint(admin_bp)
 
     from src.users.routes import users
     from src.main.routes import main
     from src.errors.handlers import errors
-    from src.admin import bp as admin_bp
-    app.register_blueprint(admin_bp)
     app.register_blueprint(errors)
     app.register_blueprint(users)
     app.register_blueprint(main)

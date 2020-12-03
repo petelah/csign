@@ -21,6 +21,7 @@ jobs:
         run: |
           autopep8 --recursive --in-place --aggressive --aggressive .
       - name: Run Tests
-        env: GH_TEST=1
+        env:
+          GH_TEST: 1
         run: |
           python -m unittest discover src/tests/
