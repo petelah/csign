@@ -17,3 +17,4 @@ class Config:
     CSV_FOLDER = 'src/static/csv'
     S3_CSV_FOLDER = 'static/csv'
     IMAGE_URL = 'images'
+    GH_TEST = getenv('GH_TEST')

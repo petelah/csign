@@ -28,9 +28,9 @@ login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 mail = Mail()
-admin = Admin(name='c-sign', index_view=MyAdminIndexView(), template_mode='bootstrap3')
 migrate = Migrate()
-
+if not Config.GH_TEST:
+    admin = Admin(name='c-sign', index_view=MyAdminIndexView(), template_mode='bootstrap3')
 
 
 def create_app(config_class=Config):
@@ -42,8 +42,8 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
-    admin.init_app(app)
-
+    if not Config.GH_TEST:
+        admin.init_app(app)
 
     from src.users.routes import users
     from src.main.routes import main
