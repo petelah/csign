@@ -7,6 +7,7 @@
                         <h4>{{ current_user.business_name }}</h4>
                         <p class="text-secondary">{{ current_user.email }}</p>
                         <p class="text-secondary"><a href="{{ qr_file }}">Download QR code</a></p>
+                        <p class="text-secondary"><a href="/download-csv">Download Sign-up data</a></p>
                     </div>
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
@@ -64,15 +65,15 @@
                                 {{ form.email(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
-                        <div class="form-group">
-                            {{ form.logo.label() }}
-                            {{ form.logo(class="form-control-file") }}
-                            {% if form.logo.data %}
-                                {% for error in form.logo.errors %}
-                                    <span class="text-danger">{{ error }}</span></br>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+{#                        <div class="form-group">#}
+{#                            {{ form.logo.label() }}#}
+{#                            {{ form.logo(class="form-control-file") }}#}
+{#                            {% if form.logo.data %}#}
+{#                                {% for error in form.logo.errors %}#}
+{#                                    <span class="text-danger">{{ error }}</span></br>#}
+{#                                {% endfor %}#}
+{#                            {% endif %}#}
+{#                        </div>#}
 
                     </fieldset>
                     <div class="form-group">

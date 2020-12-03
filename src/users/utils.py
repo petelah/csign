@@ -7,6 +7,11 @@ from PIL import Image
 import qrcode
 import re
 from threading import Thread
+from src.models import SignIn
+from src import db
+import csv
+import boto3
+from src.config import Config
 
 
 def strip_chars(business_name):
@@ -71,3 +76,22 @@ def send_reset_email(user):
 If you did not make this request then ignore this email.    
     '''
     mail.send(msg)
+
+
+def save_csv(id):
+    random_hex = secrets.token_hex(8)
+    filename = f"{id}-{random_hex}.csv"
+    save_path = os.path.join(Config.CSV_FOLDER, filename)
+    sign_ins = SignIn.query.filter_by(business_id=id, signup=True).all()
+    save_list = []
+    for obj in sign_ins:
+        save_list.append(obj.email)
+    save_list = set(save_list)
+    print("working")
+    with open(save_path, 'w', newline='') as csvfile:
+        signinwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        signinwriter.writerow(['Email'])
+        for email in save_list:
+            signinwriter.writerow([email])
+    print("got to end")
+    return filename
