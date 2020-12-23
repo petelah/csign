@@ -88,13 +88,11 @@ def save_csv(id):
     for obj in sign_ins:
         save_list.append(obj.email)
     save_list = set(save_list)
-    print("working")
     with open(save_path, 'w', newline='') as csvfile:
         signinwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         signinwriter.writerow(['Email'])
         for email in save_list:
             signinwriter.writerow([email])
-    print("got to end")
     return filename
 
 
