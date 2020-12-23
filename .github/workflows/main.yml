@@ -33,6 +33,7 @@ jobs:
             echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
             echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+            echo "API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}" >> .env
             echo "GH_TEST=0" >> .env
             export GH_TEST=0
             export SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}
@@ -42,6 +43,7 @@ jobs:
             export MAIL_USE_TLS=${{ secrets.MAIL_USE_TLS }}
             export MAIL_USERNAME=${{ secrets.MAIL_USERNAM }}
             export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+            export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
             export FLASK_APP='run.py'
             export FLASK_ENV='production'
             export FLASK_DEBUG=0

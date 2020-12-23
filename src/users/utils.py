@@ -1,5 +1,5 @@
 from flask import url_for, current_app
-from src import mail
+from src import mail, db
 from flask_mail import Message
 import secrets
 import os
@@ -7,11 +7,12 @@ from PIL import Image
 import qrcode
 import re
 from threading import Thread
-from src.models import SignIn
-from src import db
+from src.models import SignIn, User
 import csv
-import boto3
 from src.config import Config
+import mailchimp_marketing as MailchimpMarketing
+from mailchimp_marketing.api_client import ApiClientError
+from cryptography.fernet import Fernet
 
 
 def strip_chars(business_name):
@@ -87,11 +88,46 @@ def save_csv(id):
     for obj in sign_ins:
         save_list.append(obj.email)
     save_list = set(save_list)
-    print("working")
     with open(save_path, 'w', newline='') as csvfile:
         signinwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         signinwriter.writerow(['Email'])
         for email in save_list:
             signinwriter.writerow([email])
-    print("got to end")
     return filename
+
+
+def check_api_valid(api_key):
+    if '-' not in api_key:
+        return False
+    server = api_key.split('-')
+    client = MailchimpMarketing.Client()
+    client.set_config({
+        "api_key": api_key, "server": server[1]
+    })
+    try:
+        response = client.ping.get()
+        if response['health_status'] == "Everything's Chimpy!":
+            return True
+    except ApiClientError:
+        return False
+
+
+def encrypt_user_data(data):
+    return Fernet(Config.API_SECRET_KEY).encrypt(data)
+
+
+def decrypt_user_data(data):
+    convert = bytes.fromhex(data[2::])
+    return Fernet(Config.API_SECRET_KEY).decrypt(convert)
+
+
+def business_url_return(business_menu_url, **kwargs):
+    bu = business_menu_url
+    if bu.find("http://") != 0 and bu.find("https://") != 0:
+        bu = "http://" + bu
+    return bu
+
+
+def cookie_maker():
+    pass
+
