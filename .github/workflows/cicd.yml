@@ -23,6 +23,6 @@ jobs:
       - name: Run Tests
         env:
           GH_TEST: 1
-          API_SECRET_KEY: {{ secrets.API_SECRET_KEY }}
         run: |
+          export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
           python -m unittest discover src/tests/
