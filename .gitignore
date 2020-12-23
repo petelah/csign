@@ -18,3 +18,4 @@ __pycache__/
 src/settings.py
 migrations/
 migrations-bak/
+src/static/csv/
