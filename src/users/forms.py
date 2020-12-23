@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from src.models import User
 from flask_login import current_user
 from wtforms_components import SelectField
+from src.users.utils import check_api_valid
 
 
 class RegistrationForm(FlaskForm):
@@ -65,8 +66,13 @@ class UpdateAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     menu_url = StringField('Link to online menu',
                            validators=[Length(min=2, max=200)])
+    api_key = StringField('Mailchimp API Key', validators=[Length(max=300)])
     logo = FileField('Update Logo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update')
+
+    def validate_api_key(self, api_key):
+        if not check_api_valid(api_key.data):
+            raise ValidationError('Please use a valid API key.')
 
     def validate_business_name(self, business_name):
         if business_name.data != current_user.business_name:

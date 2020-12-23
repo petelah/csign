@@ -1,4 +1,5 @@
-from os import getenv
+from os import getenv, getenvb
+
 
 class Config:
     SECRET_KEY = getenv('SECRET_KEY')
@@ -18,3 +19,4 @@ class Config:
     S3_CSV_FOLDER = 'static/csv'
     IMAGE_URL = 'images'
     GH_TEST = getenv('GH_TEST')
+    API_SECRET_KEY = getenv('API_SECRET_KEY').encode()

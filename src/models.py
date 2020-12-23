@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     verified = db.Column(db.Boolean, nullable=True, default=False)
     admin = db.Column(db.Boolean, nullable=True, default=False)
+    mail_api = db.Column(db.String, nullable=True, default='')
     sign_ins = db.relationship('SignIn', backref='user_id')
 
     def get_reset_token(self, expires_sec=1800):

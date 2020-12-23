@@ -1,8 +1,9 @@
-from flask import render_template, request, Blueprint, flash, redirect, url_for, abort
+from flask import render_template, request, Blueprint, flash, redirect, url_for, abort, make_response
+from datetime import datetime
 from src.models import SignIn, User
 from src import db
 from src.users.forms import SignInForm, ContactForm
-from src.users import send_contact_email
+from src.users import send_contact_email, business_url_return
 
 main = Blueprint('main', __name__)
 
@@ -53,15 +54,20 @@ def sign_in(business_name):
         db.session.add(new_sign_in)
         db.session.commit()
         if business.menu_url is not None:
-            bu = business.menu_url
-            if bu.find("http://") != 0 and bu.find("https://") != 0:
-                bu = "http://" + bu
-            return redirect(bu)
+            bu = business_url_return(business.menu_url)
+            res = make_response(redirect(bu))
+            res.set_cookie(business_name, 'signed_in', max_age=60 * 1)
+            return res
         else:
             flash('You have been signed in!', 'success')
             return render_template('signin.html', logo=logo, business_name=b_name, form=form)
 
     elif request.method == 'GET':
+        if request.cookies.get(business_name):
+            if business.menu_url is not None:
+                bu = business_url_return(business.menu_url)
+                res = make_response(redirect(bu))
+                return res
         logo = url_for('static', filename='profile_pics/' + business.logo)
         b_name = business.business_name
         return render_template('signin.html', logo=logo, business_name=b_name, form=form)

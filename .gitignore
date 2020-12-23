@@ -15,4 +15,6 @@ share/
 .aws
 src/.env
 __pycache__/
-settings.py
+src/settings.py
+migrations/
+migrations-bak/
