@@ -65,7 +65,7 @@ def sign_in(business_name):
         if business.menu_url is not None:
             bu = business_url_return(business.menu_url)
             res = make_response(redirect(bu))
-            res.set_cookie(business_name, 'signed_in', secure=True, max_age=60 * 1)
+            res.set_cookie(business_name, 'signed_in', secure=True, max_age=60 * 60 * 4)
             if not request.cookies.get('csign'):
                 res.set_cookie('csign', 'signed_in', secure=True, max_age=60 * 60 * 24 * 365 * 1)
                 res.set_cookie('csign-email', form.email.data, secure=True, max_age=60 * 60 * 24 * 365 * 1)
