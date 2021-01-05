@@ -78,6 +78,9 @@ def sign_in(business_name):
             return render_template('signin.html', logo=logo, business_name=business_name, form=form)
 
     elif request.method == 'GET':
+        bu = business_url_return(business.menu_url)
+        res = make_response(redirect(bu))
+        return res
         if request.cookies.get('csign'):
             # pull cookie information
             form.email.data = request.cookies.get('csign-email')
