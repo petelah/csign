@@ -2,8 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint,
 from src import db, bcrypt
 from src.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                              RequestResetForm, ResetPasswordForm)
-from src.users.utils import save_picture, send_reset_email, send_qr_email, generate_qr, strip_chars, save_csv, \
-	encrypt_user_data, decrypt_user_data
+from src.services import save_picture, save_csv, EmailService, generate_qr, strip_chars, Encryption
 from src.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from src.config import Config
@@ -72,7 +71,7 @@ def account():
 		current_user.business_url = strip_chars(form.business_url.data).lower()
 		current_user.email = form.email.data
 		current_user.business_name = form.business_name.data
-		current_user.mail_api = encrypt_user_data(form.api_key.data.encode())
+		current_user.mail_api = Encryption.encrypt_user_data(form.api_key.data.encode())
 		db.session.commit()
 		flash('Your account has been updated!', 'success')
 		return redirect(url_for('users.account'))
@@ -82,7 +81,7 @@ def account():
 		form.business_url.data = current_user.business_url
 		form.email.data = current_user.email
 		if current_user.mail_api:
-			form.api_key.data = decrypt_user_data(current_user.mail_api).decode()
+			form.api_key.data = Encryption.decrypt_user_data(current_user.mail_api).decode()
 		else:
 			form.api_key.data = current_user.mail_api
 	logo = url_for('static', filename='profile_pics/' + current_user.logo)
@@ -107,7 +106,7 @@ def reset_request():
 	form = RequestResetForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
-		send_reset_email(user)
+		EmailService.send_reset_email(user)
 		flash('An email has been sent with instructions to reset your password', 'info')
 		return redirect(url_for('users.login'))
 	return render_template('reset_request.html', title='Reset Password', form=form)

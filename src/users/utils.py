@@ -1,5 +1,5 @@
 from flask import url_for, current_app
-from src import mail, db
+from src import mail
 from flask_mail import Message
 import secrets
 import os
@@ -7,7 +7,7 @@ from PIL import Image
 import qrcode
 import re
 from threading import Thread
-from src.models import SignIn, User
+from src.models import SignIn
 import csv
 from src.config import Config
 import mailchimp_marketing as MailchimpMarketing
@@ -31,8 +31,6 @@ def save_picture(form_picture):
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
-
-    #form_picture.save(picture_path)
 
     return picture_fn
 

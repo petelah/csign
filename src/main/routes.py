@@ -3,7 +3,8 @@ from datetime import datetime
 from src.models import SignIn, User
 from src import db
 from src.users.forms import SignInForm, ContactForm
-from src.users import send_contact_email, business_url_return
+from src.users import send_contact_email
+from src.services import business_url_return, EmailService
 
 main = Blueprint('main', __name__)
 
@@ -28,7 +29,7 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        send_contact_email(
+        EmailService.send_contact_email(
             form.name.data,
             form.email.data,
             form.message.data

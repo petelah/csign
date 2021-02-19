@@ -12,6 +12,31 @@ class TestUser(unittest.TestCase):
 		cls.app_context = cls.app.app_context()
 		cls.app_context.push()
 		cls.client = cls.app.test_client()
+
+		if os.environ.get("FLASK_ENV") != "testing":
+			raise EnvironmentError("FLASK_ENV not equal to 'testing'")
+
+		db.create_all()
+		runner = cls.app.test_cli_runner()
+		runner.invoke(args=["db-custom", "seed"])
+
+	@classmethod
+	def tearDown(cls):
+		db.session.remove()
+		db.drop_all()
+		cls.app_context.pop()
+		try:
+			os.remove('../testdb.db')
+		except Exception as e:
+			print(e)
+			print("Test db unable to be deleted, please delete manually.")
+
+	@classmethod
+	def setUp(cls):
+		cls.app = create_app()
+		cls.app_context = cls.app.app_context()
+		cls.app_context.push()
+		cls.client = cls.app.test_client()
 		cls.app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///csign.db'
 		cls.app.config["SECRET_KEY"] = '983475987498573485394ht'
 		cls.bcrypt = Bcrypt()
