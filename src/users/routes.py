@@ -5,7 +5,6 @@ from src.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
 from src.services import save_picture, save_csv, EmailService, generate_qr, strip_chars, Encryption
 from src.models import User
 from flask_login import login_user, current_user, logout_user, login_required
-from src.config import Config
 
 users = Blueprint('users', __name__)
 

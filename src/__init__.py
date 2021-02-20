@@ -8,8 +8,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from flask_migrate import Migrate
-from os import getenv
-from src.config import Config
 
 
 db = SQLAlchemy()

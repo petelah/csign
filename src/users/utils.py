@@ -9,7 +9,6 @@ import re
 from threading import Thread
 from src.models import SignIn
 import csv
-from src.config import Config
 import mailchimp_marketing as MailchimpMarketing
 from mailchimp_marketing.api_client import ApiClientError
 from cryptography.fernet import Fernet

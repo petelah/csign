@@ -21,8 +21,6 @@ jobs:
         run: |
           autopep8 --recursive --in-place --aggressive --aggressive .
       - name: Run Tests
-        env:
-          GH_TEST: 1
         run: |
           export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
           python -m unittest discover src/tests/
