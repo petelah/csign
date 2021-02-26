@@ -23,7 +23,16 @@ jobs:
       - name: Run Tests
         run: |
           export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
+          export AWS_ACCESS_KEY=1
+          export AWS_SECRET_KEY=1
+          export AWS_S3_BUCKET=1
+          export TEST_DB_URI=sqlite:///testdb.db
+          export S3_FOLDER='static/'
+          export CSV_FOLDER='src/static/csv'
+          export TEST_PASSWORD=123456
           export FLASK_ENV=testing
+          export JWT_SECRET_KEY=duck
+          export FLASK_APP=run.py
           touch src/.env
           echo "${{ secrets.SECRET_KEY }}" >> src/.env
           python -m unittest discover src/tests/
