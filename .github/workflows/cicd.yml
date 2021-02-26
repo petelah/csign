@@ -34,6 +34,6 @@ jobs:
           export JWT_SECRET_KEY=duck
           export SECRET_KEY=duck
           export FLASK_APP=run.py
-          touch src/.env
-          echo "${{ secrets.SECRET_KEY }}" >> src/.env
+          touch csign/src/.env
+          echo "${{ secrets.SECRET_KEY }}" >> csign/src/.env
           python -m unittest discover src/tests/

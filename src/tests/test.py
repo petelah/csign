@@ -39,6 +39,7 @@ class TestUser(unittest.TestCase):
 			'/login',
 			content_type='application/x-www-form-urlencoded',
 			data=data,
+			follow_redirects=True
 		)
 
 	def register(self, data):
@@ -67,8 +68,7 @@ class TestUser(unittest.TestCase):
 			'password': self.TEST_PASSWORD
 		}
 		response = self.login(login_data)
-		self.assertEqual(response.status_code, 302)
-		self.assertIn('/account', response.location)
+		self.assertEqual(response.status_code, 200)
 
 		# Change user data
 		user = User.query.filter_by(email="test1@test.com").first()
@@ -134,13 +134,14 @@ class TestUser(unittest.TestCase):
 			'password': self.TEST_PASSWORD
 		}
 		response = self.login(login_data)
-		self.assertEqual(response.status_code, 302)
-		self.assertIn('/account', response.location)
+		self.assertEqual(response.status_code, 200)
+		self.assertIn(b'Account', response.data)
 
 	def test_logout(self):
 		# logout
 		response = self.logout()
 		self.assertEqual(response.status_code, 200)
+		self.assertIn(b'C-Sign', response.data)
 
 	def test_register_user(self):
 		new_user = {
