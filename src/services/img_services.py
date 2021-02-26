@@ -2,6 +2,8 @@ import secrets
 import os
 from PIL import Image
 from flask import current_app
+import qrcode
+from .general_services import strip_chars
 
 
 def save_picture(form_picture):
@@ -15,15 +17,14 @@ def save_picture(form_picture):
     i.thumbnail(output_size)
     i.save(picture_path)
 
-    #form_picture.save(picture_path)
-
     return picture_fn
 
 
 def generate_qr(business_name):
-    img = qrcode.make('http://c-sign.in/signin/' + strip_chars(business_name))
+    stripped_name = strip_chars(business_name)
+    img = qrcode.make('http://c-sign.in/signin/' + stripped_name)
     random_hex = secrets.token_hex(8)
-    picture_fn = business_name + random_hex + '.png'
+    picture_fn = stripped_name + random_hex + '.png'
     picture_path = os.path.join(current_app.root_path, 'static/qr_codes', picture_fn)
     img.save(picture_path)
 

@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app
+from src.services import generate_qr, strip_chars
 
 from src import db
 
@@ -20,84 +21,51 @@ def drop_db():
 
 @db_commands.cli.command("seed")
 def seed_db():
-    from src.models.User import User
-    from src.models.Posts import Posts
-    from src.models.Business import Business
-    from src.models.Comments import Comments
-    from src.models.SignIn import SignIn
+    from src.models import User, SignIn
     from src import bcrypt
     from faker import Faker
     import random
 
     faker = Faker()
     users = []
-    businesses = []
-    posts = []
-    TEST_PASSWORD = current_app.config["TEST_PASSWORD"]
+    TEST_PASSWORD = '123456'
 
     if not TEST_PASSWORD:
         raise ValueError('TEST_PASSWORD not provided.')
+
+    websites = ['www.facebook.com', 'www.microsoft.com', 'www.instagram.com', 'www.reddit.com', 'www.gmail.com', 'www.bing.com']
 
     for i in range(5):
         # Add users
         user = User()
         user.email = f"test{i}@test.com"
-        user.bio = faker.paragraph(nb_sentences=3)
+        user.business_name = f"test{i}"
+        user.business_url = strip_chars(user.business_name)
         user.username = f"test{i}"
-        user.f_name = faker.first_name()
-        user.l_name = faker.last_name()
+        user.menu_url = websites[i]
+        user.first_name = faker.first_name()
+        user.last_name = faker.last_name()
+        user.phone_number = faker.msisdn()
+        user.address = faker.address()
+        user.state = "NSW"
+        user.post_code = "2222"
+        user.qr_image = generate_qr(user.business_name)
         user.password = bcrypt.generate_password_hash(f"{TEST_PASSWORD}").decode("utf-8")
-
-        # Add businesses
-        business = Business()
-        business.email = user.email
-        business.business_name = faker.bs()
-        business.address = f"{i} test St"
-        business.state = "NSW"
-        business.post_code = f"123{i}"
-        business.country = "Australia"
-        business.sign_in_enabled = True
-        business.verified = True
-        business.user = user
-
         db.session.add(user)
         users.append(user)
-        businesses.append(business)
-        db.session.add(business)
 
     db.session.commit()
     print("Users Added")
 
-    for i in range(20):
-        post = Posts()
-        post.filename = f"{random.randrange(1, 15)}.jpg"
-        post.content = faker.paragraph(nb_sentences=3)
-        post.user_id = random.choice(users).id
-        posts.append(post)
-        db.session.add(post)
-
-    db.session.commit()
-    print("Posts added")
-
-    for i in range(100):
-        comment = Comments()
-        comment.content = faker.paragraph(nb_sentences=2)
-        comment.username = random.choice(users).username
-        comment.post_id = random.choice(posts).id
-
-        db.session.add(comment)
-
-    db.session.commit()
-    print("Posts added")
-
-    for i in range(350):
+    for i in range(25):
         sign_in = SignIn()
         sign_in.email = f"test{i}@test.com"
-        sign_in.name = f"test_name{i}"
+        sign_in.first_name = faker.first_name()
+        sign_in.last_name = faker.last_name()
+        sign_in.phone = faker.msisdn()
         sign_in.symptoms = True
-        sign_in.follow = True
-        sign_in.signup = True
-        sign_in.business_id = random.choice(businesses).id
+        sign_in.signup = random.choice([True, False])
+        sign_in.business_id = random.choice(users).id
         db.session.add(sign_in)
 
     db.session.commit()

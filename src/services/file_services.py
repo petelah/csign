@@ -63,7 +63,7 @@ class FileService:
 def save_csv(id):
     random_hex = secrets.token_hex(8)
     filename = f"{id}-{random_hex}.csv"
-    save_path = os.path.join(Config.CSV_FOLDER, filename)
+    save_path = os.path.join(current_app.config["CSV_FOLDER"], filename)
     sign_ins = SignIn.query.filter_by(business_id=id, signup=True).all()
     save_list = []
     for obj in sign_ins:

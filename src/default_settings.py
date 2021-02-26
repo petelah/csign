@@ -95,6 +95,7 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
 	TESTING = True
+	WTF_CSRF_ENABLED = False
 
 	@property
 	def SQLALCHEMY_DATABASE_URI(self):

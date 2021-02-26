@@ -71,8 +71,9 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_api_key(self, api_key):
-        if not check_api_valid(api_key.data):
-            raise ValidationError('Please use a valid API key.')
+        if api_key.data:
+            if not check_api_valid(api_key.data):
+                raise ValidationError('Please use a valid API key.')
 
     def validate_business_name(self, business_name):
         if business_name.data != current_user.business_name:
@@ -100,7 +101,7 @@ class RequestResetForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Reset Password')
+    submit = SubmitField('Change Password')
 
 
 class SignInForm(FlaskForm):

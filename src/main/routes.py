@@ -1,10 +1,8 @@
-from flask import render_template, request, Blueprint, flash, redirect, url_for, abort, make_response
-from datetime import datetime
+from flask import render_template, request, Blueprint, flash, redirect, url_for, make_response
 from src.models import SignIn, User
 from src import db
 from src.users.forms import SignInForm, ContactForm
-from src.users import send_contact_email
-from src.services import business_url_return, EmailService
+from src.services import business_url_return, EmailService, create_cookie, grab_cookie
 
 main = Blueprint('main', __name__)
 
@@ -68,11 +66,7 @@ def sign_in(business_name):
             res = make_response(redirect(bu))
             res.set_cookie(business_name, 'signed_in', secure=True, max_age=60 * 60 * 4)
             if not request.cookies.get('csign'):
-                res.set_cookie('csign', 'signed_in', secure=True, max_age=60 * 60 * 24 * 365 * 1)
-                res.set_cookie('csign-email', form.email.data, secure=True, max_age=60 * 60 * 24 * 365 * 1)
-                res.set_cookie('csign-fname', form.first_name.data, secure=True, max_age=60 * 60 * 24 * 365 * 1)
-                res.set_cookie('csign-lname', form.last_name.data, secure=True, max_age=60 * 60 * 24 * 365 * 1)
-                res.set_cookie('csign-phone', form.phone_number.data, secure=True, max_age=60 * 60 * 24 * 365 * 1)
+                create_cookie(res, form)
             return res
         else:
             flash('You have been signed in!', 'success')
@@ -81,10 +75,7 @@ def sign_in(business_name):
     elif request.method == 'GET':
         if request.cookies.get('csign'):
             # pull cookie information
-            form.email.data = request.cookies.get('csign-email')
-            form.first_name.data = request.cookies.get('csign-fname')
-            form.last_name.data = request.cookies.get('csign-lname')
-            form.phone_number.data = request.cookies.get('csign-phone')
+            grab_cookie(form, request)
         if request.cookies.get(business_name):
             if business.menu_url is not None:
                 bu = business_url_return(business.menu_url)

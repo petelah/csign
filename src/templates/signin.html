@@ -2,7 +2,9 @@
 {% block content %}
     <div class="login-clean">
         <form method="POST" action="">
-            {{ form.csrf_token() }}
+            {% if 'csrf_token' in form %}
+                {{form.csrf_token()}}
+            {% endif %}
             <div class="media">
 {#                    <img class="account-img" src="{{ logo }}">#}
                     <div class="media-body">

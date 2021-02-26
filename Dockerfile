@@ -26,4 +26,4 @@ ENV FLASK_DEBUG=0
 # Expose working port
 EXPOSE 5000
 
-CMD gunicorn -w 2 --bind 0.0.0.0:5000 run:app
+CMD gunicorn -w 1 --bind 0.0.0.0:5000 run:app

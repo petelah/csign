@@ -4,3 +4,4 @@ from .img_services import save_picture, generate_qr
 from .email_services import EmailService
 from .mailchimp_services import check_api_valid
 from .general_services import business_url_return, strip_chars
+from .cookie_services import create_cookie, grab_cookie
