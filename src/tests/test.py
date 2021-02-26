@@ -4,7 +4,7 @@ from src.models import User, SignIn
 import os
 
 
-class TestUser(unittest.TestCase):
+class TestSite(unittest.TestCase):
 	TEST_PASSWORD = '123456'
 
 	@classmethod
