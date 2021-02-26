@@ -25,7 +25,7 @@ def generate_qr(business_name):
     img = qrcode.make('http://c-sign.in/signin/' + stripped_name)
     random_hex = secrets.token_hex(8)
     picture_fn = stripped_name + random_hex + '.png'
-    picture_path = os.path.join(current_app.root_path, 'static/qr_codes', picture_fn)
+    picture_path = os.path.join(os.getcwd(), 'src/static/qr_codes', picture_fn)
     img.save(picture_path)
 
     return picture_fn
