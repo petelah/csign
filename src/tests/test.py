@@ -95,7 +95,7 @@ class TestSite(unittest.TestCase):
 
 	def test_change_password(self):
 		login_data = {
-			'email': 'test1@test.com',
+			'email': 'test2@test.com',
 			'password': self.TEST_PASSWORD
 		}
 		response = self.login(login_data)
@@ -118,7 +118,7 @@ class TestSite(unittest.TestCase):
 
 		# Login with new password
 		login_data = {
-			'email': 'test1@test.com',
+			'email': 'test2@test.com',
 			'password': 'test1'
 		}
 		response = self.login(login_data)

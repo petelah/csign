@@ -36,4 +36,4 @@ jobs:
           export FLASK_APP=run.py
           touch src/.env
           echo "${{ secrets.SECRET_KEY }}" >> src/.env
-          python -m unittest discover src/tests/
+          python -m unittest test.TestSite src/tests
