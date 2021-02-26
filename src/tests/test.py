@@ -19,19 +19,20 @@ class TestSite(unittest.TestCase):
 		runner = cls.app.test_cli_runner()
 		runner.invoke(args=["db-custom", "create"])
 		runner.invoke(args=["db-custom", "seed"])
+		print(os.getcwd())
 
 	@classmethod
 	def tearDownClass(cls):
 		cls.app_context.pop()
 		try:
-			os.remove('../testdb.db')
+			os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
 		except Exception as e:
 			print(e)
 			print("Test db unable to be deleted, please delete manually.")
 		# Remove qr codes
-		for root, dirs, images in os.walk('../static/qr_codes'):
+		for root, dirs, images in os.walk(os.path.join(os.getcwd(), 'src/static/qr_codes')):
 			for image in images:
-				os.remove(os.path.join('../static/qr_codes/', image))
+				os.remove(os.path.join(os.getcwd(), 'src/static/qr_codes/', image))
 
 	# Helpers
 	def login(self, data):
@@ -69,9 +70,11 @@ class TestSite(unittest.TestCase):
 		}
 		response = self.login(login_data)
 		self.assertEqual(response.status_code, 200)
+		self.assertIn(b'Account', response.data)
 
 		# Change user data
 		user = User.query.filter_by(email="test1@test.com").first()
+		print(user.business_name)
 		change_data = {
 			'email': 'test99@test.com',
 			'business_name': user.business_name,
@@ -159,7 +162,10 @@ class TestSite(unittest.TestCase):
 		}
 		response = self.register(new_user)
 		user = User.query.filter_by(email='test8@test.com').first()
-		files = os.path.isfile(f'../static/qr_codes/{user.qr_image}')
+		files = os.path.isfile(
+			os.path.join(os.getcwd(),
+			             f"src/static/qr_codes/{user.qr_image}")
+		)
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(user.email, 'test8@test.com')
 		self.assertTrue(files, True)
