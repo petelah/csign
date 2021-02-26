@@ -23,4 +23,5 @@ jobs:
       - name: Run Tests
         run: |
           export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
+          export FLASK_ENV=testing
           python -m unittest discover src/tests/
