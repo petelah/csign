@@ -24,13 +24,13 @@ class TestSite(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		cls.app_context.pop()
-		if not os.getenv("GH_TEST"):
-			try:
-				os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
-			except Exception as e:
-				print(e)
-				print("Test db unable to be deleted, please delete manually.")
+		# cls.app_context.pop()
+		# if not cls.app.config["GH_TEST"]:
+		# 	try:
+		# 		os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
+		# 	except Exception as e:
+		# 		print(e)
+		# 		print("Test db unable to be deleted, please delete manually.")
 		# Remove qr codes
 		for root, dirs, images in os.walk(os.path.join(os.getcwd(), 'src/static/qr_codes')):
 			for image in images:
@@ -76,7 +76,6 @@ class TestSite(unittest.TestCase):
 
 		# Change user data
 		user = User.query.filter_by(email="test1@test.com").first()
-		print(user.business_name)
 		change_data = {
 			'email': 'test99@test.com',
 			'business_name': user.business_name,
