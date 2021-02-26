@@ -26,13 +26,14 @@ jobs:
           export AWS_ACCESS_KEY_ID=1
           export AWS_SECRET_ACCESS_KEY=1
           export AWS_S3_BUCKET=1
-          export TEST_DB_URI=sqlite:///testdb.db
+          export TEST_DB_URI=sqlite:///:memory:
           export S3_FOLDER='static/'
           export CSV_FOLDER='src/static/csv'
           export TEST_PASSWORD=123456
           export FLASK_ENV=testing
           export JWT_SECRET_KEY=duck
           export SECRET_KEY=duck
+          export GH_TEST=1
           export FLASK_APP=run.py
           touch src/.env
           echo "${{ secrets.SECRET_KEY }}" >> src/.env

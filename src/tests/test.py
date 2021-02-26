@@ -2,6 +2,7 @@ import unittest
 from src import create_app, db
 from src.models import User, SignIn
 import os
+from flask import current_app
 
 
 class TestSite(unittest.TestCase):
@@ -24,11 +25,12 @@ class TestSite(unittest.TestCase):
 	@classmethod
 	def tearDownClass(cls):
 		cls.app_context.pop()
-		try:
-			os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
-		except Exception as e:
-			print(e)
-			print("Test db unable to be deleted, please delete manually.")
+		if not current_app.config["GH_TEST"]:
+			try:
+				os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
+			except Exception as e:
+				print(e)
+				print("Test db unable to be deleted, please delete manually.")
 		# Remove qr codes
 		for root, dirs, images in os.walk(os.path.join(os.getcwd(), 'src/static/qr_codes')):
 			for image in images:
@@ -162,6 +164,7 @@ class TestSite(unittest.TestCase):
 		}
 		response = self.register(new_user)
 		user = User.query.filter_by(email='test8@test.com').first()
+		print(os.getcwd())
 		files = os.path.isfile(
 			os.path.join(os.getcwd(),
 			             f"src/static/qr_codes/{user.qr_image}")
