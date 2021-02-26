@@ -25,5 +25,5 @@ jobs:
           export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
           export FLASK_ENV=testing
           touch src/.env
-          echo "${{ secrets.SECRET_KEY }}" >> .env
+          echo "${{ secrets.SECRET_KEY }}" >> src/.env
           python -m unittest discover src/tests/
