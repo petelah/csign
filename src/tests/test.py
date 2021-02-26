@@ -25,7 +25,7 @@ class TestSite(unittest.TestCase):
 	@classmethod
 	def tearDownClass(cls):
 		cls.app_context.pop()
-		if not current_app.config["GH_TEST"]:
+		if not os.getenv("GH_TEST"):
 			try:
 				os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
 			except Exception as e:
