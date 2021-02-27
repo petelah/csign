@@ -1,5 +1,6 @@
 import secrets
 import os
+from pathlib import Path
 from PIL import Image
 from flask import current_app
 import qrcode
@@ -21,6 +22,10 @@ def save_picture(form_picture):
 
 
 def generate_qr(business_name):
+    qr_dir = Path.cwd().joinpath("src", "static", "qr_codes")
+    if not qr_dir.exists():
+        qr_dir.mkdir(parents=True, exist_ok=True)
+
     stripped_name = strip_chars(business_name)
     img = qrcode.make('http://c-sign.in/signin/' + stripped_name)
     random_hex = secrets.token_hex(8)
