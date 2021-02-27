@@ -24,7 +24,7 @@ class TestSite(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		# cls.app_context.pop()
+		cls.app_context.pop()
 		# if not cls.app.config["GH_TEST"]:
 		# 	try:
 		# 		os.remove(os.path.join(os.getcwd(), 'src/testdb.db'))
@@ -78,10 +78,9 @@ class TestSite(unittest.TestCase):
 		user = User.query.filter_by(email="test1@test.com").first()
 		change_data = {
 			'email': 'test99@test.com',
-			'business_name': user.business_name,
-			'business_url': user.business_name,
-			'menu_url': user.menu_url
-
+			'business_name': 'test1',
+			'business_url': 'test1',
+			'menu_url': 'www.microsoft.com'
 		}
 		response = self.client.post(
 			'/account',
