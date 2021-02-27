@@ -35,4 +35,4 @@ jobs:
           export SECRET_KEY=duck
           export GH_TEST=1
           export FLASK_APP=run.py
-          sudo python -m unittest discover src/tests/ -v
+          python -m unittest discover src/tests/ -v
