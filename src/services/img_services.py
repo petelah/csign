@@ -5,6 +5,7 @@ from PIL import Image
 from flask import current_app
 import qrcode
 from .general_services import strip_chars
+from .file_services import FileService
 
 
 def save_picture(form_picture):
@@ -28,9 +29,12 @@ def generate_qr(business_name):
 
     stripped_name = strip_chars(business_name)
     img = qrcode.make('http://c-sign.in/signin/' + stripped_name)
-    random_hex = secrets.token_hex(8)
-    picture_fn = stripped_name + random_hex + '.png'
-    picture_path = os.path.join(os.getcwd(), 'src/static/qr_codes', picture_fn)
-    img.save(picture_path)
+    if current_app.config['FLASK_ENV'] == 'production':
+        picture_fn = FileService.save_qr(img, '.png', business_name)
+    else:
+        random_hex = secrets.token_hex(8)
+        picture_fn = stripped_name + random_hex + '.png'
+        picture_path = os.path.join(os.getcwd(), 'src/static/qr_codes', picture_fn)
+        img.save(picture_path)
 
     return picture_fn

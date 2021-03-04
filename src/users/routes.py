@@ -5,6 +5,7 @@ from src.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
 from src.services import save_picture, save_csv, EmailService, generate_qr, strip_chars, Encryption
 from src.models import User
 from flask_login import login_user, current_user, logout_user, login_required
+import os
 
 users = Blueprint('users', __name__)
 
@@ -30,6 +31,8 @@ def register():
                     password=hashed_password)
         db.session.add(user)
         db.session.commit()
+        if current_app.config['FLASK_ENV'] == 'production':
+            EmailService.send_confirm_email(form.first_name.data, form.email.data)
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -83,7 +86,11 @@ def account():
         else:
             form.api_key.data = current_user.mail_api
     logo = url_for('static', filename='profile_pics/' + current_user.logo)
-    qr_file = url_for('static', filename='qr_codes/' + current_user.qr_image)
+    # Serve files from cloudfront if server is in production
+    if current_app.config["FLASK_ENV"] == 'production':
+        qr_file = f'https://ddjesgdltvd54.cloudfront.net/qr_codes/{current_user.qr_image}'
+    else:
+        qr_file = url_for('static', filename='qr_codes/' + current_user.qr_image)
     return render_template('account.html', title='Account', logo=logo, qr_file=qr_file, form=form)
 
 
@@ -103,7 +110,7 @@ def change_password():
 def download_csv():
     try:
         filename = save_csv(current_user.id)
-        return send_from_directory(current_app.config["S3_CSV_FOLDER"], filename=filename, as_attachment=True)
+        return send_from_directory(os.path.join(os.getcwd(),current_app.config["CSV_FOLDER"]), filename=filename, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 

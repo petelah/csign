@@ -4,6 +4,7 @@ import os
 class Config(object):
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	MAX_CONTENT_LENGTH = 1 * 1024 * 1024
+	FLASK_ENV = os.environ.get("FLASK_ENV")
 
 	@property
 	def SQLALCHEMY_DATABASE_URI(self):

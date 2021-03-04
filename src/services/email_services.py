@@ -23,7 +23,7 @@ class EmailService:
                       recipients=['admin@c-sign.in'])
         msg.body = f"""{message}"""
         app = current_app._get_current_object()
-        Thread(target=send_async_email, args=(app, msg)).start()
+        Thread(target=EmailService.send_async_email, args=(app, msg)).start()
 
     @staticmethod
     def send_reset_email(user):
@@ -37,3 +37,14 @@ class EmailService:
     If you did not make this request then ignore this email.    
         '''
         mail.send(msg)
+
+    @staticmethod
+    def send_confirm_email(name, email):
+        msg = Message(f'Welcome to C-Sign {name}!',
+                      sender='noreply@c-sign.in',
+                      recipients=[email])
+        msg.body = f"""
+        Welcome to C-Sign!
+        Login here:{url_for('users.login')}"""
+        app = current_app._get_current_object()
+        Thread(target=EmailService.send_async_email, args=(app, msg)).start()

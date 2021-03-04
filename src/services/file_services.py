@@ -9,6 +9,9 @@ from botocore.exceptions import ClientError
 from flask import current_app
 from PIL import Image
 from src.models import SignIn
+from threading import Thread
+from time import sleep
+from pathlib import Path
 
 
 class FileService:
@@ -56,14 +59,37 @@ class FileService:
         return None
 
     @classmethod
+    def save_qr(cls, img, suffix, business_name):
+        # Generate a id + hexed filename
+        filename = business_name + '-' + secrets.token_hex(8) + suffix
+        img_byte_array = io.BytesIO()
+        img.save(img_byte_array, format="PNG")
+        img_byte_array = img_byte_array.getvalue()
+        try:
+            cls.s3.Bucket(current_app.config["AWS_S3_BUCKET"]).put_object(
+                Key=os.path.join('qr_codes', filename),
+                Body=img_byte_array
+            )
+            return filename
+        except ClientError as e:
+            # log error here
+            logging.warning(e)
+            print(e)
+        return None
+
+    @classmethod
     def file_store(cls):
         pass
 
 
 def save_csv(id):
+    csv_dir = Path.cwd().joinpath("src", "static", "csv")
+    if not csv_dir.exists():
+        csv_dir.mkdir(parents=True, exist_ok=True)
+
     random_hex = secrets.token_hex(8)
     filename = f"{id}-{random_hex}.csv"
-    save_path = os.path.join(current_app.config["CSV_FOLDER"], filename)
+    save_path = os.path.join(os.getcwd(), 'src/static/csv', filename)
     sign_ins = SignIn.query.filter_by(business_id=id, signup=True).all()
     save_list = []
     for obj in sign_ins:
@@ -74,8 +100,12 @@ def save_csv(id):
         signinwriter.writerow(['Email'])
         for email in save_list:
             signinwriter.writerow([email])
+    Thread(target=csv_delete, args=(filename,)).start()
     return filename
 
 
-def csv_delete():
-    pass
+def csv_delete(filename):
+    sleep(20)
+    os.remove(os.path.join(
+        os.getcwd(), 'src/static/csv', filename
+    ))

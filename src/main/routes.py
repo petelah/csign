@@ -13,11 +13,6 @@ def home():
     return render_template('home.html')
 
 
-@main.route("/home2")
-def home2():
-    return render_template('home2.html')
-
-
 @main.route("/about")
 def about():
     return render_template('about.html', title='About')
@@ -64,6 +59,7 @@ def sign_in(business_name):
         if business.menu_url is not None:
             bu = business_url_return(business.menu_url)
             res = make_response(redirect(bu))
+            # Set sign in to 4 hours so guest can re-scan the code
             res.set_cookie(business_name, 'signed_in', secure=True, max_age=60 * 60 * 4)
             if not request.cookies.get('csign'):
                 create_cookie(res, form)

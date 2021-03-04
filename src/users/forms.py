@@ -43,7 +43,22 @@ class RegistrationForm(FlaskForm):
     def validate_business_name(self, business_name):
         user = User.query.filter_by(business_name=business_name.data).first()
         if user:
-            raise ValidationError('Username in use, please choose a different one.')
+            raise ValidationError('Business name in use, please choose a different one.')
+
+    def validate_phone_number(self, phone_number):
+        user = User.query.filter_by(phone_number=phone_number.data).first()
+        if user:
+            raise ValidationError('Phone number in use, please choose a different one.')
+
+    def validate_address(self, address):
+        user = User.query.filter_by(address=address.data).first()
+        if user:
+            raise ValidationError('Address name in use, please choose a different one.')
+
+    def validate_menu_url(self, menu_url):
+        user = User.query.filter_by(menu_url=menu_url.data).first()
+        if user:
+            raise ValidationError('URL in use, please choose a different one.')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
