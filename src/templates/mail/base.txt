@@ -1,0 +1,5 @@
+{% block body %}{% endblock %}
+
+---
+The C-Sign Team
+{{ config.HOSTNAME }}

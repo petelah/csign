@@ -1,7 +1,6 @@
-from flask import url_for, current_app
-from src import mail
-from flask_mail import Message
+from flask import url_for, current_app, render_template
 from threading import Thread
+import boto3
 
 
 class EmailService:
@@ -12,39 +11,64 @@ class EmailService:
 
     @staticmethod
     def send_async_email(app, msg):
-        with app.app_context():
-            mail.send(msg)
-
-    @staticmethod
-    def send_contact_email(name, email, message):
-        msg = Message(f'Contact email from {name}',
-                      sender=email,
-                      reply_to=email,
-                      recipients=['admin@c-sign.in'])
-        msg.body = f"""{message}"""
-        app = current_app._get_current_object()
-        Thread(target=EmailService.send_async_email, args=(app, msg)).start()
+        pass
 
     @staticmethod
     def send_reset_email(user):
-        token = user.get_reset_token()
-        msg = Message('Password Reset Request',
-                      sender='noreply@demo.com',
-                      recipients=[user.email])
-        msg.body = f'''To reset your password, visit the following link:
-    {url_for('reset_token', token=token, _external=True)}
-    
-    If you did not make this request then ignore this email.    
-        '''
-        mail.send(msg)
+        token = user.issue_token()
+        body_html = render_template(
+            'mail/user/reset_password.html',
+            name=user.first_name,
+            token=token,
+            email=user.email
+        )
+        body_text = render_template(
+            'mail/user/reset_password.txt',
+            name=user.first_name,
+            token=token,
+            email=user.email
+        )
+        EmailService.email(user.email, 'Password Reset', body_html, body_text)
 
     @staticmethod
-    def send_confirm_email(name, email):
-        msg = Message(f'Welcome to C-Sign {name}!',
-                      sender='noreply@c-sign.in',
-                      recipients=[email])
-        msg.body = f"""
-        Welcome to C-Sign!
-        Login here:{url_for('users.login')}"""
-        app = current_app._get_current_object()
-        Thread(target=EmailService.send_async_email, args=(app, msg)).start()
+    def send_confirm_email(user):
+        token = user.issue_token()
+        body_html = render_template(
+            'mail/user/join_email.html',
+            name=user.first_name,
+            token=token,
+        )
+        body_text = render_template(
+            'mail/user/join_email.txt',
+            name=user.first_name,
+            token=token,
+        )
+        EmailService.email(user.email, 'Welcome to C-Sign!', body_html, body_text)
+
+    @staticmethod
+    def email(to_email, subject, body_html, body_text):
+        client = boto3.client('ses', region_name='ap-southeast-2')
+        return client.send_email(
+            Source='noreply@c-sign.in',
+            Destination={
+                'ToAddresses': [
+                    to_email,
+                ]
+            },
+            Message={
+                'Subject': {
+                    'Data': subject,
+                    'Charset': 'UTF-8'
+                },
+                'Body': {
+                    'Text': {
+                        'Data': body_text,
+                        'Charset': 'UTF-8'
+                    },
+                    'Html': {
+                        'Data': body_html,
+                        'Charset': 'UTF-8'
+                    },
+                }
+            }
+        )

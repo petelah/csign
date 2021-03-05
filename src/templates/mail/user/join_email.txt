@@ -1,0 +1,7 @@
+{% extends "mail/base.txt" %}
+
+{% block body %}
+Welcome to C-Sign, {{ name }}.
+Verify your account here:
+http://c-sign.in/verify_user/{{ token }}
+{% endblock %}

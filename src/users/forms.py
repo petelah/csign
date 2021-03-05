@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from src.models import User
 from flask_login import current_user
 from wtforms_components import SelectField
-from src.users.utils import check_api_valid
+from src.services import check_api_valid
 
 
 class RegistrationForm(FlaskForm):

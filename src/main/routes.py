@@ -1,8 +1,9 @@
-from flask import render_template, request, Blueprint, flash, redirect, url_for, make_response
+from flask import render_template, request, Blueprint, flash, redirect, url_for, make_response, current_app
 from src.models import SignIn, User
 from src import db
 from src.users.forms import SignInForm, ContactForm
 from src.services import business_url_return, EmailService, create_cookie, grab_cookie
+from src.users.decorators import verify_business
 
 main = Blueprint('main', __name__)
 
@@ -22,16 +23,26 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        EmailService.send_contact_email(
-            form.name.data,
-            form.email.data,
-            form.message.data
-        )
+        if current_app.config["FLASK_ENV"] == 'production':
+            body_html = render_template(
+                'mail/user/contact_email.html',
+                name=form.name.data,
+                message=form.message.data,
+                email=form.email.data
+            )
+            body_text = render_template(
+                'mail/user/contact_email.txt',
+                name=form.name.data,
+                message=form.message.data,
+                email=form.email.data
+            )
+            EmailService.email('admin@c-sign.in', 'New message.', body_html, body_text)
         return render_template('success.html', type='email')
     return render_template('contact.html', title='Contact Us', form=form)
 
 
 @main.route("/signin/<string:business_name>", methods=['GET', 'POST'])
+@verify_business
 def sign_in(business_name):
     """
     Main sign in function.
@@ -41,6 +52,7 @@ def sign_in(business_name):
     :param business_name:
     :return:
     """
+    req = request
     business = User.query.filter_by(business_url=business_name).first_or_404()
     logo = url_for('static', filename='profile_pics/' + business.logo)
     form = SignInForm()

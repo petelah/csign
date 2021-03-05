@@ -32,7 +32,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         if current_app.config['FLASK_ENV'] == 'production':
-            EmailService.send_confirm_email(form.first_name.data, form.email.data)
+            EmailService.send_confirm_email(user)
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -132,7 +132,7 @@ def reset_request():
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
-    user = User.verify_reset_token(token)
+    user = User.verify_token(token)
     if user is None:
         flash('That token is invalid or expired', 'warning')
         return redirect(url_for('reset_request'))
@@ -144,3 +144,17 @@ def reset_token(token):
         flash('Your password has now been updated!', 'success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+
+@users.route("/verify_user/<token>", methods=['GET'])
+def verify_user(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
+    user = User.verify_token(token)
+    if user is None:
+        flash('That token is invalid or expired', 'warning')
+        return redirect(url_for('users.login'))
+    user.verified = True
+    db.session.commit()
+    flash('You are now verified!', 'success')
+    return redirect(url_for('users.account'))

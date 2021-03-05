@@ -16,33 +16,6 @@ class Config(object):
 		return value
 
 	@property
-	def AWS_ACCESS_KEY_ID(self):
-		value = os.environ.get("AWS_ACCESS_KEY_ID")
-
-		if not value:
-			raise ValueError("AWS_ACCESS_KEY_ID is not set")
-
-		return value
-
-	@property
-	def AWS_SECRET_ACCESS_KEY(self):
-		value = os.environ.get("AWS_SECRET_ACCESS_KEY")
-
-		if not value:
-			raise ValueError("AWS_SECRET_ACCESS_KEY is not set")
-
-		return value
-
-	@property
-	def AWS_S3_BUCKET(self):
-		value = os.environ.get("AWS_S3_BUCKET")
-
-		if not value:
-			print("AWS_S3_BUCKET not set, using local storage.")
-
-		return value
-
-	@property
 	def SECRET_KEY(self):
 		value = os.environ.get("SECRET_KEY")
 
@@ -85,11 +58,29 @@ class ProductionConfig(Config):
 		return value
 
 	@property
+	def AWS_ACCESS_KEY_ID(self):
+		value = os.environ.get("AWS_ACCESS_KEY_ID")
+
+		if not value:
+			raise ValueError("AWS_ACCESS_KEY_ID is not set")
+
+		return value
+
+	@property
+	def AWS_SECRET_ACCESS_KEY(self):
+		value = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+		if not value:
+			raise ValueError("AWS_SECRET_ACCESS_KEY is not set")
+
+		return value
+
+	@property
 	def AWS_S3_BUCKET(self):
 		value = os.environ.get("AWS_S3_BUCKET")
 
 		if not value:
-			raise ValueError("AWS_S3_BUCKET is not set")
+			print("AWS_S3_BUCKET not set, using local storage.")
 
 		return value
 
@@ -97,6 +88,7 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
 	TESTING = True
 	WTF_CSRF_ENABLED = False
+	DEBUG = True
 
 	@property
 	def SQLALCHEMY_DATABASE_URI(self):
