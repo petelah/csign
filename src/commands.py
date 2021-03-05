@@ -33,7 +33,7 @@ def seed_db():
     if not TEST_PASSWORD:
         raise ValueError('TEST_PASSWORD not provided.')
 
-    websites = ['www.facebook.com', 'www.microsoft.com', 'www.instagram.com', 'www.reddit.com', 'www.gmail.com', 'www.bing.com']
+    websites = ['www.facebook.com', 'www.microsoft.com', 'www.instagram.com', 'www.reddit.com', 'www.gmail.com', 'www.bing.com', 'www.excel.com']
 
     for i in range(5):
         # Add users
@@ -54,6 +54,24 @@ def seed_db():
         user.password = bcrypt.generate_password_hash(f"{TEST_PASSWORD}").decode("utf-8")
         db.session.add(user)
         users.append(user)
+
+    user = User()
+    user.email = f"test10@test.com"
+    user.business_name = f"test10"
+    user.business_url = strip_chars(user.business_name)
+    user.username = f"test10"
+    user.menu_url = websites[-1]
+    user.first_name = faker.first_name()
+    user.last_name = faker.last_name()
+    user.phone_number = faker.msisdn()
+    user.address = faker.address()
+    user.state = "NSW"
+    user.post_code = "2222"
+    user.verified = False
+    user.qr_image = generate_qr(user.business_name)
+    user.password = bcrypt.generate_password_hash(f"{TEST_PASSWORD}").decode("utf-8")
+    db.session.add(user)
+    users.append(user)
 
     db.session.commit()
     print("Users Added")

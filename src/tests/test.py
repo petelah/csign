@@ -180,3 +180,18 @@ class TestSite(unittest.TestCase):
 		self.assertEqual(response.status_code, 302)
 		self.assertEqual(new_signin.first_name, 'test111')
 		self.assertIn('microsoft', response.location)
+
+	def test_unverified_user(self):
+		user_data = {
+			'first_name': 'test111',
+			'last_name': 'test222',
+			'email': 't@t.com',
+			'phone_number': '435345345345',
+			'symptoms': True
+		}
+		response = self.client.post(
+			'/signin/test10',
+			content_type='application/x-www-form-urlencoded',
+			data=user_data,
+		)
+		self.assertEqual(response.status_code, 404)
