@@ -49,6 +49,7 @@ def seed_db():
         user.address = faker.address()
         user.state = "NSW"
         user.post_code = "2222"
+        user.verified = True
         user.qr_image = generate_qr(user.business_name)
         user.password = bcrypt.generate_password_hash(f"{TEST_PASSWORD}").decode("utf-8")
         db.session.add(user)
