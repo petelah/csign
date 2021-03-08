@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    env_file: src/.env
+    image: postgres:latest
+    networks:
+      - default
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "csign-test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web-server:
+    build: .
+    image: csign_server
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: src/.env
+    environment:
+      FLASK_ENV: testing
+      FLASK_APP: run.py
+    command: ["python", "-m", "unittest", "discover", "src/tests/", "-v"]
+    networks:
+      - default
+    ports:
+      - 5000:5000
+

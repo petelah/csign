@@ -1,12 +1,11 @@
 import unittest
-from src import create_app, db
+from src import create_app
 from src.models import User, SignIn
 import os
-from flask import current_app
 
 
 class TestSite(unittest.TestCase):
-	TEST_PASSWORD = '123456'
+	TEST_PASSWORD = os.environ.get("TEST_PASSWORD")
 
 	@classmethod
 	def setUpClass(cls):
@@ -158,7 +157,7 @@ class TestSite(unittest.TestCase):
 		user = User.query.filter_by(email='test8@test.com').first()
 		print(os.getcwd())
 		files = os.path.isfile(
-			os.path.join(os.getcwd(),f"src/static/qr_codes/{user.qr_image}"))
+			os.path.join(os.getcwd(), f"src/static/qr_codes/{user.qr_image}"))
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(user.email, 'test8@test.com')
 		self.assertTrue(files, True)
@@ -182,16 +181,7 @@ class TestSite(unittest.TestCase):
 		self.assertIn('microsoft', response.location)
 
 	def test_unverified_user(self):
-		user_data = {
-			'first_name': 'test111',
-			'last_name': 'test222',
-			'email': 't@t.com',
-			'phone_number': '435345345345',
-			'symptoms': True
-		}
-		response = self.client.post(
+		response = self.client.get(
 			'/signin/test10',
-			content_type='application/x-www-form-urlencoded',
-			data=user_data,
 		)
 		self.assertEqual(response.status_code, 404)

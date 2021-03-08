@@ -1,9 +1,21 @@
 from flask import Blueprint, current_app
 from src.services import generate_qr, strip_chars
+from src.models import User
+from sqlalchemy.exc import OperationalError
 
 from src import db
 
 db_commands = Blueprint("db-custom", __name__)
+
+
+@db_commands.cli.command("check")
+def check_db():
+    try:
+        user = User.query.get(1)
+        if user:
+            print("1")
+    except OperationalError:
+        print("0")
 
 
 @db_commands.cli.command("create")
@@ -28,7 +40,7 @@ def seed_db():
 
     faker = Faker()
     users = []
-    TEST_PASSWORD = '123456'
+    TEST_PASSWORD = current_app.config["TEST_PASSWORD"]
 
     if not TEST_PASSWORD:
         raise ValueError('TEST_PASSWORD not provided.')

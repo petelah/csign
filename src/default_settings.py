@@ -48,14 +48,6 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-	@property
-	def JWT_SECRET_KEY(self):
-		value = os.getenv("JWT_SECRET_KEY")
-
-		if not value:
-			raise ValueError("JWT_SECRET_KEY is not set")
-
-		return value
 
 	@property
 	def AWS_ACCESS_KEY_ID(self):
@@ -92,7 +84,7 @@ class TestingConfig(Config):
 
 	@property
 	def SQLALCHEMY_DATABASE_URI(self):
-		value = os.environ.get("TEST_DB_URI")
+		value = os.environ.get("DOCKER_SQLALCHEMY_DATABASE_URI")
 
 		if not value:
 			raise ValueError("DB_URI is not set")
