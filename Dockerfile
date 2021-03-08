@@ -32,4 +32,4 @@ EXPOSE 5000
 
 # CMD ./init.sh
 # CMD flask db upgrade
-# CMD gunicorn -w 2 --bind 0.0.0.0:5000 run:app
+CMD gunicorn -w 2 --bind 0.0.0.0:5000 run:app

@@ -24,7 +24,6 @@ services:
     environment:
       FLASK_ENV: testing
       FLASK_APP: run.py
-    command: ["python", "-m", "unittest", "discover", "src/tests/", "-v"]
     networks:
       - default
     ports:
