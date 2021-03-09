@@ -9,20 +9,11 @@ jobs:
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v2
-      - name: Set Up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Lint code
-        run: |
-          autopep8 --recursive --in-place --aggressive --aggressive .
+      - name: Setup env
+        run: cp src/env.example src/.env
+      - name: Create containers
+        run: docker-compose up -d
       - name: Run Tests
-        env:
-          GH_TEST: 1
-        run: |
-          export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
-          python -m unittest discover src/tests/
+        run: docker-compose run web-server python -m unittest discover src/tests/ -v
+
+

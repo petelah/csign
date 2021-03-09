@@ -1,0 +1,9 @@
+{% extends "mail/base.html" %}
+
+{% block body %}
+<h3>Welcome to C-Sign, {{ name }}</h3>
+
+<p>Verify your account here: <br />
+http://c-sign.in/verify_user/{{ token }}
+</p>
+{% endblock %}

@@ -31,12 +31,12 @@ class User(db.Model, UserMixin):
     mail_api = db.Column(db.String, nullable=True, default='')
     sign_ins = db.relationship('SignIn', backref='user_id')
 
-    def get_reset_token(self, expires_sec=1800):
+    def issue_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
-    def verify_reset_token(token):
+    def verify_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']

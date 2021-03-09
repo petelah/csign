@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from src.models import User
 from flask_login import current_user
 from wtforms_components import SelectField
-from src.users.utils import check_api_valid
+from src.services import check_api_valid
 
 
 class RegistrationForm(FlaskForm):
@@ -43,7 +43,22 @@ class RegistrationForm(FlaskForm):
     def validate_business_name(self, business_name):
         user = User.query.filter_by(business_name=business_name.data).first()
         if user:
-            raise ValidationError('Username in use, please choose a different one.')
+            raise ValidationError('Business name in use, please choose a different one.')
+
+    def validate_phone_number(self, phone_number):
+        user = User.query.filter_by(phone_number=phone_number.data).first()
+        if user:
+            raise ValidationError('Phone number in use, please choose a different one.')
+
+    def validate_address(self, address):
+        user = User.query.filter_by(address=address.data).first()
+        if user:
+            raise ValidationError('Address name in use, please choose a different one.')
+
+    def validate_menu_url(self, menu_url):
+        user = User.query.filter_by(menu_url=menu_url.data).first()
+        if user:
+            raise ValidationError('URL in use, please choose a different one.')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
@@ -71,8 +86,9 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_api_key(self, api_key):
-        if not check_api_valid(api_key.data):
-            raise ValidationError('Please use a valid API key.')
+        if api_key.data:
+            if not check_api_valid(api_key.data):
+                raise ValidationError('Please use a valid API key.')
 
     def validate_business_name(self, business_name):
         if business_name.data != current_user.business_name:
@@ -100,7 +116,7 @@ class RequestResetForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Reset Password')
+    submit = SubmitField('Change Password')
 
 
 class SignInForm(FlaskForm):

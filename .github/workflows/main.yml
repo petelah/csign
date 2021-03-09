@@ -1,54 +1,108 @@
-name: deploy to EC2
+#name: deploy to EC2
+#on:
+#  push:
+#    branches: [ main ]
+#
+#jobs:
+#  deployment:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Fresh clone & repo install
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: c-sign.in
+#          username: flask
+#          key: ${{ secrets.GH_ACTIONS }}
+#          port: 22
+#          script: |
+#            cd /home/flask
+#            rm -rf csign
+#            git clone https://github.com/petelah/csign.git
+#            python3.8 -m venv /home/flask/csign/venv
+#            /home/flask/csign/venv/bin/pip3.8 install wheel
+#            /home/flask/csign/venv/bin/pip3.8 install -r /home/flask/csign/requirements.txt
+#            cd /home/flask/csign
+#            touch .env
+#            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+#            echo "SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}" >> .env
+#            echo "SQLALCHEMY_TRACK_MODIFICATIONS=${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}" >> .env
+#            echo "MAIL_SERVER=${{ secrets.MAIL_SERVER }}" >> .env
+#            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+#            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+#            echo "MAIL_USE_TLS=${{ secrets.MAIL_USE_TLS }}" >> .env
+#            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+#            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+#            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+#            echo "API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}" >> .env
+#            export SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}
+#            export SQLALCHEMY_TRACK_MODIFICATIONS=${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}
+#            export MAIL_SERVER=${{ secrets.MAIL_SERVER }}
+#            export MAIL_PORT=${{ secrets.MAIL_PORT }}
+#            export MAIL_USE_TLS=${{ secrets.MAIL_USE_TLS }}
+#            export MAIL_USERNAME=${{ secrets.MAIL_USERNAM }}
+#            export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+#            export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
+#            export FLASK_APP='run.py'
+#            export FLASK_ENV='production'
+#            export FLASK_DEBUG=0
+#            export PYTHONPATH=$PYTHONPATH:.
+#            sudo systemctl stop csign
+#            sudo systemctl start csign
+#            sudo systemctl enable csign
+#            sudo systemctl restart nginx
+
 on:
   push:
     branches: [ main ]
 
+name: Deploy to Amazon ECS
+
 jobs:
-  deployment:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+
     steps:
-      - name: Fresh clone & repo install
-        uses: appleboy/ssh-action@master
-        with:
-          host: c-sign.in
-          username: flask
-          key: ${{ secrets.GH_ACTIONS }}
-          port: 22
-          script: |
-            cd /home/flask
-            rm -rf csign
-            git clone https://github.com/petelah/csign.git
-            python3.8 -m venv /home/flask/csign/venv
-            /home/flask/csign/venv/bin/pip3.8 install wheel
-            /home/flask/csign/venv/bin/pip3.8 install -r /home/flask/csign/requirements.txt
-            cd /home/flask/csign
-            touch .env
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-            echo "SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}" >> .env
-            echo "SQLALCHEMY_TRACK_MODIFICATIONS=${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}" >> .env
-            echo "MAIL_SERVER=${{ secrets.MAIL_SERVER }}" >> .env
-            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
-            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
-            echo "MAIL_USE_TLS=${{ secrets.MAIL_USE_TLS }}" >> .env
-            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
-            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-            echo "API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}" >> .env
-            echo "GH_TEST=0" >> .env
-            export GH_TEST=0
-            export SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}
-            export SQLALCHEMY_TRACK_MODIFICATIONS=${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}
-            export MAIL_SERVER=${{ secrets.MAIL_SERVER }}
-            export MAIL_PORT=${{ secrets.MAIL_PORT }}
-            export MAIL_USE_TLS=${{ secrets.MAIL_USE_TLS }}
-            export MAIL_USERNAME=${{ secrets.MAIL_USERNAM }}
-            export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
-            export API_SECRET_KEY=${{ secrets.API_SECRET_KEY }}
-            export FLASK_APP='run.py'
-            export FLASK_ENV='production'
-            export FLASK_DEBUG=0
-            export PYTHONPATH=$PYTHONPATH:.
-            sudo systemctl stop csign
-            sudo systemctl start csign
-            sudo systemctl enable csign
-            sudo systemctl restart nginx
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: c-sign
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: c-sign
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: c-sign-server
+        cluster: C-Sign
+        wait-for-service-stability: true
