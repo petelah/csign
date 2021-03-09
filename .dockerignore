@@ -156,6 +156,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-migrations/
+
 migrations-bak/
 migrate.pgloader/

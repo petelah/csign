@@ -66,9 +66,12 @@ FLASK_ENV will need to be set to 'production'.
 
 
 __Local:__
+The following commands will get you up and running locally:
 
 ```shell script
-docker-compose up
+docker-compose up -d
+docker-compose run web-server flask create
+docker-compose run web-server flask seed
 ```
 
 __Deployment:__
