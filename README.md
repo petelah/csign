@@ -67,7 +67,13 @@ FLASK_ENV will need to be set to 'production'.
 
 __Local:__
 The following commands will get you up and running locally:
+Testing:
+```shell script
+docker-compose up -d
+docker-compose run web-server python -m unittest discover src/tests/ -v
+```
 
+Running:
 ```shell script
 docker-compose up -d
 docker-compose run web-server flask create
