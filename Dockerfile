@@ -6,16 +6,11 @@ RUN mkdir /app
 
 # Copy files over
 COPY run.py /app
-COPY wait.sh /app
-COPY init.sh /app
 COPY requirements.txt /app
 COPY src/ /app/src/
 
 # Make working dir app
 WORKDIR /app
-
-#Update alpine and python
-# RUN apt-get update && apt-get install -y postgresql-client
 
 # Upgrade pip
 RUN pip3 install --upgrade pip
