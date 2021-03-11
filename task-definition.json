@@ -32,12 +32,40 @@
       "cpu": 0,
       "environment": [
         {
+          "name": "API_SECRET_KEY",
+          "value": "hJ7JW447RviyDxkCQRnbwNsHOzygV5yHWLKnRC0UU_0\\="
+        },
+        {
+          "name": "AWS_KEY_ACCESS_ID",
+          "value": "AKIAQY76E4SGLA7NBA67"
+        },
+        {
+          "name": "AWS_S3_BUCKET",
+          "value": "csign-public"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": "/REnnVs8h5Ftrk6b+XQ4f+Or/M8FDn23+Wtz2uiq"
+        },
+        {
           "name": "FLASK_APP",
           "value": "run.py"
         },
         {
           "name": "FLASK_ENV",
           "value": "production"
+        },
+        {
+          "name": "S3_FOLDER",
+          "value": "static/"
+        },
+        {
+          "name": "SECRET_KEY",
+          "value": "983475987498573485394ht"
+        },
+        {
+          "name": "SQLALCHEMY_DATABASE_URI",
+          "value": "postgres+psycopg2://csign:H$%1173k@10.0.1.224/csign"
         }
       ],
       "resourceRequirements": null,
@@ -73,11 +101,11 @@
   ],
   "placementConstraints": [],
   "memory": null,
-  "taskRoleArn": null,
+  "taskRoleArn": "arn:aws:iam::053683217548:role/tasked-sign",
   "compatibilities": [
     "EC2"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-southeast-2:053683217548:task-definition/c-sign-web:4",
+  "taskDefinitionArn": "arn:aws:ecs:ap-southeast-2:053683217548:task-definition/c-sign-web:7",
   "family": "c-sign-web",
   "requiresAttributes": [
     {
@@ -120,6 +148,12 @@
       "targetId": null,
       "targetType": null,
       "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
       "name": "ecs.capability.execution-role-ecr-pull"
     },
     {
@@ -141,7 +175,7 @@
   ],
   "networkMode": "awsvpc",
   "cpu": null,
-  "revision": 4,
+  "revision": 7,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,

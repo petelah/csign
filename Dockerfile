@@ -24,6 +24,7 @@ ENV FLASK_DEBUG=0
 
 # Expose working port
 EXPOSE 5000
+EXPOSE 5432
 
 # CMD ./init.sh
 # CMD flask db upgrade
