@@ -5,8 +5,8 @@ on:
 name: Deploy to Amazon ECS
 
 jobs:
-  deploy:
-    name: Deploy
+  update-image:
+    name: Update New Image
     runs-on: ubuntu-latest
 
     steps:
@@ -38,18 +38,37 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        container-name: csign
-        image: ${{ steps.build-image.outputs.image }}
-
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: c-sign
-        cluster: C-Web
-        wait-for-service-stability: true
+  deploy-new-version:
+    name: Update service
+    runs-on: ubuntu-latest
+    needs: update-image
+    steps:
+      - name: Authenticate AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+      - name: Retrieve JSON Data for Latest Task Definition
+        run: >
+          aws ecs describe-task-definition
+          --task-definition c-sign-web-server
+          --query taskDefinition > task_definition.json
+      - name: Generate JSON for New Task Definition
+        id: update-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          IMAGE: "c-sign:${{ needs.update-image.outputs.image }}"
+        with:
+          task-definition: task_definition.json
+          container-name: c-sign
+          image: ${{ env.IMAGE }}
+      - name: Test
+        run: cat ${{ steps.update-task-definition.outputs.task-definition }}
+      - name: Update Task Definition in ECS and Deploy
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
+          service: c-sign-server
+          cluster: C-S
+          wait-for-service-stability: true
