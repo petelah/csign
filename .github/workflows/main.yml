@@ -58,7 +58,7 @@ jobs:
         id: update-task-definition
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         env:
-          IMAGE: "c-sign:${{ needs.update-image.outputs.image }}"
+          IMAGE: "053683217548.dkr.ecr.ap-southeast-2.amazonaws.com/c-sign:${{ needs.update-image.outputs.image }}"
         with:
           task-definition: task_definition.json
           container-name: c-sign
