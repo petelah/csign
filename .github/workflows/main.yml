@@ -57,13 +57,11 @@ jobs:
       - name: Generate JSON for New Task Definition
         id: update-task-definition
         uses: aws-actions/amazon-ecs-render-task-definition@v1
-        env:
-          IMAGE: ${{ needs.update-image.outputs.image }}
         with:
           task-definition: task_definition.json
           container-name: c-sign
-          image: ${{ env.IMAGE }}
-      - name: Test
+          image: ${{ steps.build-image.outputs.image }}
+      - name: Deploy Amazon ECS task definition
         run: cat ${{ steps.update-task-definition.outputs.task-definition }}
       - name: Update Task Definition in ECS and Deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

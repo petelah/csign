@@ -15,6 +15,18 @@ for your business.
  - Remembers users sign in credentials for fast sign in at venues.
  - Holds sign in information for 4 hours so the same QR code can be used in venues if 
  people use it to get to the menu, no need for multiple codes.
+ 
+## Tech Stack
+ - Python
+ - Flask
+ - Postgres
+Deployment:
+ - AWS:
+    - ECS
+    - EC2
+    - Route53
+    - VPC
+    - Docker
 
 ## Requirements
 Main requirements are:
