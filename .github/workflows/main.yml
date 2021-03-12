@@ -38,30 +38,30 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Authenticate AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
-      - name: Retrieve JSON Data for Latest Task Definition
-        run: >
-          aws ecs describe-task-definition
-          --task-definition c-sign-web-server
-          --query taskDefinition > task_definition.json
-      - name: Generate JSON for New Task Definition
-        id: update-task-definition
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task_definition.json
-          container-name: c-sign
-          image: ${{ steps.build-image.outputs.image }}
-      - name: Deploy Amazon ECS task definition
-        run: cat ${{ steps.update-task-definition.outputs.task-definition }}
-      - name: Update Task Definition in ECS and Deploy
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
-          service: c-sign-web-server
-          cluster: C-S
-          wait-for-service-stability: true
+    - name: Authenticate AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
+    - name: Retrieve JSON Data for Latest Task Definition
+      run: >
+        aws ecs describe-task-definition
+        --task-definition c-sign-web-server
+        --query taskDefinition > task_definition.json
+    - name: Generate JSON for New Task Definition
+      id: update-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task_definition.json
+        container-name: c-sign
+        image: ${{ steps.build-image.outputs.image }}
+    - name: Deploy Amazon ECS task definition
+      run: cat ${{ steps.update-task-definition.outputs.task-definition }}
+    - name: Update Task Definition in ECS and Deploy
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
+        service: c-sign-web-server
+        cluster: C-S
+        wait-for-service-stability: true
