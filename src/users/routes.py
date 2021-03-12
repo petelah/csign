@@ -160,8 +160,9 @@ def verify_user(token):
     flash('You are now verified!', 'success')
     return redirect(url_for('users.account'))
 
-@users.route("/admin", methods=["GET", "POST"]):
+
+@users.route("/admin", methods=["GET", "POST"])
 @admin_required
 def admin():
-    users =
-    return render_template('admin.html', title='Admin')
+    users = User.query.get().all()
+    return render_template('admin.html', title='Admin', users=users)
