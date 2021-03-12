@@ -4,6 +4,7 @@ from src.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                              RequestResetForm, ResetPasswordForm)
 from src.services import save_picture, save_csv, EmailService, generate_qr, strip_chars, Encryption
 from src.models import User
+from src.users.decorators import admin_required
 from flask_login import login_user, current_user, logout_user, login_required
 import os
 
@@ -158,3 +159,9 @@ def verify_user(token):
     db.session.commit()
     flash('You are now verified!', 'success')
     return redirect(url_for('users.account'))
+
+@users.route("/admin", methods=["GET", "POST"]):
+@admin_required
+def admin():
+    users =
+    return render_template('admin.html', title='Admin')
