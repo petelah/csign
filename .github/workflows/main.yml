@@ -38,11 +38,6 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-  deploy-new-version:
-    name: Update service
-    runs-on: ubuntu-latest
-    needs: update-image
-    steps:
       - name: Authenticate AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -60,7 +55,7 @@ jobs:
         with:
           task-definition: task_definition.json
           container-name: c-sign
-          image: ${{ steps.update-image.outputs.image }}
+          image: ${{ steps.build-image.outputs.image }}
       - name: Deploy Amazon ECS task definition
         run: cat ${{ steps.update-task-definition.outputs.task-definition }}
       - name: Update Task Definition in ECS and Deploy
