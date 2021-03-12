@@ -60,7 +60,7 @@ jobs:
         with:
           task-definition: task_definition.json
           container-name: c-sign
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ steps.update-image.outputs.image }}
       - name: Deploy Amazon ECS task definition
         run: cat ${{ steps.update-task-definition.outputs.task-definition }}
       - name: Update Task Definition in ECS and Deploy
