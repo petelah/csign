@@ -62,6 +62,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
-        service: c-sign-web-server
+        service: sign-web-server
         cluster: Csign2
         wait-for-service-stability: true
