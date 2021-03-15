@@ -63,5 +63,5 @@ jobs:
       with:
         task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
         service: c-sign-web-server
-        cluster: C-S
+        cluster: Csign2
         wait-for-service-stability: true
