@@ -16,4 +16,18 @@ jobs:
       - name: Run Tests
         run: docker-compose run web-server python -m unittest discover src/tests/ -v
 
+  create_pr:
+    runs-on: ubuntu-latest
+    needs: test_suite
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_branch: "main"
+          title: "An automatically created PR!"
+
+
 
