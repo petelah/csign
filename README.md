@@ -98,3 +98,15 @@ This is designed to be run through the pipeline of: Github actions -> build imag
 on ECS.
 There are many other cloud providers you could run this on but it would require you to decouple from AWS integration and 
 is not advised.
+
+## Development
+
+### Task delegration
+I have decided with this app and since I am a team of one to use a modified approach of the agile method.
+
+I mapped out my time with a gantt chart after submitting my part A.
+![Gantt_chart](docs/gant.png)
+
+Since there was only one of me I swapped out scrums for basic end of night task lists of what I needed to focus on the next day and then
+delegated the tasks to myself via KANBAN style boards.
+![kanban](docs/trello/6.png)
