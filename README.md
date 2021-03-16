@@ -89,8 +89,8 @@ docker-compose run web-server python -m unittest discover src/tests/ -v
 Running:
 ```shell script
 docker-compose up -d
-docker-compose run web-server flask create
-docker-compose run web-server flask seed
+docker-compose run web-server flask db-custom create
+docker-compose run web-server flask db-custom seed
 ```
 
 __Deployment:__
