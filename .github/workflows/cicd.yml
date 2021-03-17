@@ -27,7 +27,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_branch: "main"
-          title: "An automatically created PR!"
 
 
 

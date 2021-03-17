@@ -69,7 +69,9 @@ def account():
             picture_file = save_picture(form.logo.data)
             current_user.logo = picture_file
         current_user.menu_url = form.menu_url.data
-        current_user.business_url = strip_chars(form.business_url.data).lower()
+        if form.business_url.data != current_user.business_url:
+            current_user.business_url = strip_chars(form.business_url.data).lower()
+            generate_qr(form.business_url.data)
         current_user.email = form.email.data
         current_user.business_name = form.business_name.data
         if form.api_key.data:
@@ -111,7 +113,7 @@ def change_password():
 def download_csv():
     try:
         filename = save_csv(current_user.id)
-        return send_from_directory(os.path.join(os.getcwd(),current_app.config["CSV_FOLDER"]), filename=filename, as_attachment=True)
+        return send_from_directory(os.path.join(os.getcwd(),'src/static/csv'), filename=filename, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
@@ -164,5 +166,5 @@ def verify_user(token):
 @users.route("/admin", methods=["GET", "POST"])
 @admin_required
 def admin():
-    users = User.query.get().all()
-    return render_template('admin.html', title='Admin', users=users)
+    list_users = User.query.get().all()
+    return render_template('admin.html', title='Admin', users=list_users)
