@@ -166,5 +166,5 @@ def verify_user(token):
 @users.route("/admin", methods=["GET", "POST"])
 @admin_required
 def admin():
-    users = User.query.get().all()
-    return render_template('admin.html', title='Admin', users=users)
+    list_users = User.query.get().all()
+    return render_template('admin.html', title='Admin', users=list_users)
